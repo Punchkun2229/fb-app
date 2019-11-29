@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import ChatItem from './ChatItem';
+
 
 @Component({
   selector: 'app-root',
@@ -6,8 +9,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  textMessage = 'fb-app';
+  textMessage = "";
+  private itemsCollection: AngularFirestoreCollection<ChatItem>;
+
+  constructor(private afs: AngularFirestore){
+    this.itemsCollection = afs.collection<ChatItem>('lobby');
+  }
+
   doIt(){
     console.log(this.textMessage)
+    //send to firestore
+    this.itemsCollection.add({
+      sender: "Punch",
+      message: this.textMessage
+    })
+    this.textMessage = ""
   }
 }
